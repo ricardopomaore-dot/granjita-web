@@ -9,6 +9,11 @@
 <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
 <style>
+
+#videoPlayer{
+  transition: opacity 0.5s ease;
+}
+
 body{
 margin:0;
 background:#0f0f0f;
@@ -382,20 +387,30 @@ after.style.clipPath=`inset(0 0 0 ${percent}%)`;
 
 // Videos
 function showVideo1(){
-  videoPlayer.pause();
-  videoPlayer.removeAttribute("poster");
-  videoPlayer.src="video/animacion-opt.mp4";
-  videoPlayer.load();
-  videoPlayer.play();
+
+  videoPlayer.style.opacity = "0";
+
+  setTimeout(() => {
+    videoPlayer.src="video/animacion-opt.mp4";
+    videoPlayer.load();
+    videoPlayer.play();
+    videoPlayer.style.opacity = "1";
+  }, 500);
+
   btnVideo1.classList.add("active");
   btnVideo2.classList.remove("active");
 }
 function showVideo2(){
-  videoPlayer.pause();
-  videoPlayer.removeAttribute("poster");
-  videoPlayer.src="video/reel-opt.mp4";
-  videoPlayer.load();
-  videoPlayer.play();
+
+  videoPlayer.style.opacity = "0";
+
+  setTimeout(() => {
+    videoPlayer.src="video/reel-opt.mp4";
+    videoPlayer.load();
+    videoPlayer.play();
+    videoPlayer.style.opacity = "1";
+  }, 500);
+
   btnVideo2.classList.add("active");
   btnVideo1.classList.remove("active");
 }
@@ -479,6 +494,5 @@ window.addEventListener("load", function(){
   }, 2000);
 });
 </script>
-<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </body>
 </html>
