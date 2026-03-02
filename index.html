@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Granjita de Jorge Luis</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+<style>
+body{
+margin:0;
+background:#0f0f0f;
+color:white;
+font-family:Arial,sans-serif;
+text-align:center;
+overflow-x:hidden;
+}
+
+header{padding:25px 20px 15px;}
+
+h1{
+font-family:'Playfair Display',serif;
+font-style:italic;
+font-size:38px;
+margin:0;
+}
+
+.subtitle{font-size:15px;color:#aaa;margin-top:5px;}
+
+.nav{margin-top:20px;}
+
+.nav button{
+background:#1f1f1f;
+color:white;
+border:none;
+padding:14px 30px;
+margin:6px;
+border-radius:14px;
+font-size:15px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.nav button:hover{background:white;color:black;}
+
+.section{
+display:none;
+padding:40px 0 60px 0;
+animation:fade 0.3s ease-in-out;
+}
+
+.section.active{
+display:flex;
+justify-content:center;
+}
+
+@keyframes fade{from{opacity:0;}to{opacity:1;}}
+
+.content-box{
+background:#1a1a1a;
+padding:30px;
+border-radius:22px;
+width:90%;
+max-width:1050px;
+display:flex;
+flex-direction:column;
+align-items:center;
+}
+
+.description{
+color:#aaa;
+margin-bottom:15px;
+max-width:700px;
+line-height:1.5;
+font-style:italic;
+}
+
+.toggle-buttons{margin-bottom:15px;}
+
+.toggle-buttons button{
+background:#222;
+color:white;
+border:none;
+padding:9px 22px;
+margin:4px;
+border-radius:20px;
+cursor:pointer;
+font-size:14px;
+transition:0.3s;
+}
+
+.toggle-buttons button:hover{background:white;color:black;}
+.toggle-buttons button.active{background:white;color:black;}
+
+.content-box img,
+.content-box video{
+max-height:60vh;
+max-width:100%;
+border-radius:15px;
+}
+
+/* Comparador */
+.before-after{
+position:relative;
+max-height:60vh;
+max-width:100%;
+overflow:hidden;
+border-radius:15px;
+}
+
+.before-after img{
+width:100%;
+display:block;
+}
+
+.before-after .after{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+clip-path: inset(0 0 0 50%);
+}
+
+.slider{
+position:absolute;
+top:0;
+left:50%;
+width:3px;
+height:100%;
+background:white;
+cursor:ew-resize;
+}
+
+.slider::before{
+content:"";
+position:absolute;
+top:50%;
+left:-8px;
+width:20px;
+height:20px;
+background:white;
+border-radius:50%;
+transform:translateY(-50%);
+}
+
+/* Spin */
+#spinContainer{
+user-select:none;
+-webkit-user-select:none;
+-ms-user-select:none;
+}
+
+#spinImage{
+pointer-events:none;
+user-drag:none;
+-webkit-user-drag:none;
+}
+/* ===== LOADER FULLSCREEN ===== */
+#loader{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#0f0f0f;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:9999;
+transition:opacity 0.6s ease;
+}
+
+.loader-content{
+text-align:center;
+color:white;
+}
+
+.loader-bar{
+width:250px;
+height:6px;
+background:#222;
+margin-top:20px;
+border-radius:4px;
+overflow:hidden;
+}
+
+.loader-progress{
+height:100%;
+width:0%;
+background:white;
+animation:loadingBar 2s linear forwards;
+}
+
+@keyframes loadingBar{
+from{width:0%;}
+to{width:100%;}
+}
+</style>
+</head>
+
+<body>
+
+<div id="loader">
+  <div class="loader-content">
+    <h2>Cargando experiencia...</h2>
+    <div class="loader-bar">
+      <div class="loader-progress"></div>
+    </div>
+  </div>
+</div>
+
+<header>
+<h1>La Granjita de Jorge Luis</h1>
+<div class="subtitle">Diseñado por Jorge Manrique</div>
+
+<div class="nav">
+<button onclick="showSection('render')">Imágenes</button>
+<button onclick="showSection('visor360')">360°</button>
+<button onclick="showSection('videos')">Video</button>
+<button onclick="showSection('visor3d')">Visor 3D</button>
+<button onclick="showSection('concepto')">Concepto</button>
+</div>
+</header>
+
+<!-- IMÁGENES -->
+<div id="render" class="section active">
+<div class="content-box">
+<div class="description">
+Visualización fotorrealista del concepto escenográfico en entorno natural.
+</div>
+
+<div class="toggle-buttons">
+<button id="btnFinal" class="active" onclick="showFinal()">Imagen Final</button>
+<button id="btnCompare" onclick="showCompare()">Día y Noche</button>
+</div>
+
+<img id="finalImage" src="img/render-escena.webp">
+
+<div id="compareView" class="before-after" style="display:none;">
+<img src="img/render-dia.webp">
+<img src="img/render-noche.webp" class="after">
+<div class="slider" id="slider"></div>
+</div>
+
+</div>
+</div>
+
+<!-- 360 -->
+<div id="visor360" class="section">
+<div class="content-box">
+<div class="description">
+Experiencia inmersiva interactiva del espacio diseñado.
+</div>
+
+<div id="spinContainer" style="position:relative;max-width:100%;max-height:60vh;overflow:hidden;border-radius:15px;cursor:grab;">
+<img id="spinImage" src="img/spin/01.webp" style="width:100%;display:block;">
+</div>
+
+</div>
+</div>
+
+<!-- VIDEOS -->
+<div id="videos" class="section">
+<div class="content-box">
+<div class="description">
+Donde el concepto comienza a cobrar vida.
+</div>
+
+<div class="toggle-buttons">
+<button id="btnVideo1" class="active" onclick="showVideo1()">Video 1</button>
+<button id="btnVideo2" onclick="showVideo2()">Video 2</button>
+</div>
+
+<video 
+id="videoPlayer"
+muted
+playsinline
+loop
+preload="auto"
+poster="img/render-escena.webp"
+>
+<source src="video/animacion-opt.mp4" type="video/mp4">
+</video>
+
+</div>
+</div>
+
+<!-- VISOR 3D -->
+<div id="visor3d" class="section">
+<div class="content-box">
+<div class="description">
+Visualización interactiva del modelo tridimensional del proyecto.
+</div>
+
+<model-viewer 
+src="models/granjita3d.glb"
+camera-controls
+shadow-intensity="1"
+exposure="1"
+environment-image="neutral"
+interaction-prompt="none"
+reveal="interaction"
+loading="eager"
+style="width:100%; height:60vh; border-radius:15px; background:#111;">
+</model-viewer>
+
+</div>
+</div>
+
+<!-- CONCEPTO -->
+<div id="concepto" class="section">
+<div class="content-box">
+<div class="description">
+Inspirado en la estética rústica de la vida de granja.
+</div>
+<img src="img/concepto/insp1.webp">
+</div>
+</div>
+
+<script>
+// Secciones
+function showSection(id){
+
+  // Cambia sección visible
+  document.querySelectorAll('.section').forEach(sec=>{
+    sec.classList.remove('active');
+  });
+
+  document.getElementById(id).classList.add('active');
+
+  // Si entramos a la sección Video, reproducir automáticamente
+  if(id === "videos"){
+    videoPlayer.play();
+  } else {
+    videoPlayer.pause();
+  }
+
+}
+
+// Comparador
+function showCompare(){
+compareView.style.display="block";
+finalImage.style.display="none";
+btnCompare.classList.add("active");
+btnFinal.classList.remove("active");
+}
+
+function showFinal(){
+compareView.style.display="none";
+finalImage.style.display="block";
+btnFinal.classList.add("active");
+btnCompare.classList.remove("active");
+}
+
+const slider=document.getElementById('slider');
+const after=document.querySelector('.after');
+const container=document.getElementById('compareView');
+
+container.addEventListener('mousemove',e=>{
+let rect=container.getBoundingClientRect();
+let x=e.clientX-rect.left;
+let percent=(x/rect.width)*100;
+slider.style.left=percent+"%";
+after.style.clipPath=`inset(0 0 0 ${percent}%)`;
+});
+
+container.addEventListener('touchmove',e=>{
+let rect=container.getBoundingClientRect();
+let x=e.touches[0].clientX-rect.left;
+let percent=(x/rect.width)*100;
+slider.style.left=percent+"%";
+after.style.clipPath=`inset(0 0 0 ${percent}%)`;
+});
+
+// Videos
+function showVideo1(){
+videoPlayer.src="video/animacion-opt.mp4";
+videoPlayer.load();
+videoPlayer.play();
+btnVideo1.classList.add("active");
+btnVideo2.classList.remove("active");
+}
+
+function showVideo2(){
+videoPlayer.src="video/reel-opt.mp4";
+videoPlayer.load();videoPlayer.play();
+btnVideo2.classList.add("active");
+btnVideo1.classList.remove("active");
+}
+// ===== PRELOAD SPIN IMAGES =====
+const preloadImages = [];
+for(let i = 1; i <= 17; i++){
+  const img = new Image();
+  img.src = `img/spin/${String(i).padStart(2,'0')}.webp`;
+  preloadImages.push(img);
+}
+// Spin 360
+const spinImage=document.getElementById("spinImage");
+const spinContainer=document.getElementById("spinContainer");
+
+const totalFrames=17;
+let currentFrame=1;
+let isDragging=false;
+let startX=0;
+const pixelsPerFrame=25;
+
+function updateFrame(frame){
+if(frame<1) frame=totalFrames;
+if(frame>totalFrames) frame=1;
+currentFrame=frame;
+spinImage.src=`img/spin/${String(frame).padStart(2,'0')}.webp`;
+}
+
+spinContainer.addEventListener("mousedown",(e)=>{
+isDragging=true;
+startX=e.clientX;
+spinContainer.style.cursor="grabbing";
+});
+
+spinContainer.addEventListener("mouseup",()=>{
+isDragging=false;
+spinContainer.style.cursor="grab";
+});
+
+spinContainer.addEventListener("mouseleave",()=>{
+isDragging=false;
+spinContainer.style.cursor="grab";
+});
+
+spinContainer.addEventListener("mousemove",(e)=>{
+if(!isDragging) return;
+let delta=e.clientX-startX;
+let frameChange=Math.trunc(delta/pixelsPerFrame);
+if(frameChange!==0){
+updateFrame(currentFrame-frameChange);
+startX=e.clientX;
+}
+});
+
+spinContainer.addEventListener("touchstart",(e)=>{
+isDragging=true;
+startX=e.touches[0].clientX;
+});
+
+spinContainer.addEventListener("touchend",()=>{
+isDragging=false;
+});
+
+spinContainer.addEventListener("touchmove",(e)=>{
+if(!isDragging) return;
+let delta=e.touches[0].clientX-startX;
+let frameChange=Math.trunc(delta/pixelsPerFrame);
+if(frameChange!==0){
+updateFrame(currentFrame-frameChange);
+startX=e.touches[0].clientX;
+}
+});
+</script>
+<script>
+window.addEventListener("load", function(){
+  setTimeout(function(){
+    const loader = document.getElementById("loader");
+    loader.style.opacity = "0";
+    setTimeout(() => {
+      loader.style.display = "none";
+    }, 600);
+  }, 2000);
+});
+</script>
+</body>
+</html>
