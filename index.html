@@ -10,10 +10,7 @@
 
 <style>
 
-#videoPlayer{
-  transition: opacity 3s ease;
-  background: #000;
-}
+#videoPlayer{}
 
 body{
 margin:0;
@@ -234,7 +231,19 @@ to{width:100%;}
 
 <!-- IMÁGENES -->
 <div id="render" class="section active">
-<div class="content-box">
+<div class="content-box" id="videoBox" style="position:relative;">
+
+<div id="boxOverlay" style="
+position:absolute;
+inset:0;
+background:rgba(0,0,0,0.65);
+opacity:0;
+pointer-events:none;
+transition:opacity 0.5s ease;
+border-radius:22px;
+z-index:10;">
+</div>
+
 <div class="description">
 Visualización fotorrealista del concepto escenográfico en entorno natural.
 </div>
@@ -388,16 +397,22 @@ after.style.clipPath=`inset(0 0 0 ${percent}%)`;
 // Videos
 function changeVideo(src, activeBtn, otherBtn){
 
-  videoPlayer.style.opacity = "0";
-  videoPlayer.pause();
+  const overlay = document.getElementById("boxOverlay");
 
-  videoPlayer.oncanplay = function(){
-    videoPlayer.play();
-    videoPlayer.style.opacity = "1";
-  };
+  // Oscurecer SOLO la caja grafito
+  overlay.style.opacity = "1";
 
-  videoPlayer.src = src;
-  videoPlayer.load();
+  setTimeout(() => {
+
+    videoPlayer.pause();
+    videoPlayer.src = src;
+
+    videoPlayer.onloadeddata = function(){
+      videoPlayer.play();
+      overlay.style.opacity = "0";
+    };
+
+  }, 400);
 
   activeBtn.classList.add("active");
   otherBtn.classList.remove("active");
