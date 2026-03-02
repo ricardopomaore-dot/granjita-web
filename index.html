@@ -11,7 +11,8 @@
 <style>
 
 #videoPlayer{
-  transition: opacity 0.5s ease;
+  transition: opacity 1.5s ease;
+  background: #000;
 }
 
 body{
@@ -390,7 +391,7 @@ function changeVideo(src, activeBtn, otherBtn){
   videoPlayer.style.opacity = "0";
   videoPlayer.pause();
 
-  videoPlayer.onloadeddata = function(){
+  videoPlayer.oncanplay = function(){
     videoPlayer.play();
     videoPlayer.style.opacity = "1";
   };
