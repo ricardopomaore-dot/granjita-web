@@ -325,18 +325,22 @@ Inspirado en la estética rústica de la vida de granja.
 // Secciones
 function showSection(id){
 
-  // Cambia sección visible
   document.querySelectorAll('.section').forEach(sec=>{
     sec.classList.remove('active');
   });
 
   document.getElementById(id).classList.add('active');
 
-  // Si entramos a la sección Video, reproducir automáticamente
   if(id === "videos"){
     videoPlayer.play();
   } else {
     videoPlayer.pause();
+  }
+
+  if(id === "visor3d"){
+    const viewer = document.querySelector("model-viewer");
+    viewer.dismissPoster();
+    viewer.requestUpdate();
   }
 
 }
